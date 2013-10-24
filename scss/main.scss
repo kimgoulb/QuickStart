@@ -1,0 +1,23 @@
+/* Include all scss files here */
+
+/* Fonts */
+
+/* Sizes */
+$hSm: 20em; /* 320px */
+$hSm-Md: 36em; /* 576px */
+$hMd: 48em; /* 768px */
+$hMd-Lg: 64em; /* 1024px */
+$hLg: 75em; /* 1200px */
+$hLgr: 93.75em; /* 150px */
+
+/* Colors */
+
+
+/* Rounded Corner */
+
+/*compass mixins */
+@import "compass/utilities/general/clearfix";
+
+/* Imports */
+@import "reset";
+

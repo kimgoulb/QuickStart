@@ -1,0 +1,183 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Untitled Document</title>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" /></script>
+<style type="text/css">
+* {
+	margin: 0px;
+	padding: 0px;
+	list-style: none;
+}
+#wrapper {
+	width: 600px;
+	height: auto;
+	margin: 0px auto;
+}
+.clear
+{
+	clear: both;
+	display: block;
+	height: 0px;
+	line-height:0px;
+	overflow:hidden;
+	font-size:0;
+}
+.gallery {
+	width: 600px;
+	height: 400px;
+}
+.gallery img {
+	width: 100%;
+	height: auto;
+}
+.galleryNav {
+}
+.galleryNav .prev {
+	width:38px;
+	height: 35px;
+	float: left;
+	background-image: url(../../NEW%20Online%20Portfolio%20Site/theSite/images/prev.png);
+	background-position: left top;
+	background-repeat: no-repeat;
+	cursor: pointer;
+}
+.galleryNav .prev:hover {
+	background-image: url(../../NEW%20Online%20Portfolio%20Site/theSite/images/prev-hover.png);
+}
+.galleryNav .next {
+	width:38px;
+	height: 35px;
+	float: right;
+	background-image: url(../../NEW%20Online%20Portfolio%20Site/theSite/images/next.png);
+	background-position: right top;
+	background-repeat: no-repeat;
+	cursor: pointer;
+}
+.galleryNav .next:hover {
+	background-image: url(../../NEW%20Online%20Portfolio%20Site/theSite/images/next-hover.png);
+}
+.gallery_images {
+	width: 60px;
+	height:auto;
+	margin: 10px auto;
+}
+.gallery_images a:link, .gallery_images a:visited {
+	padding: 1px 4px;
+	background-color: #333;
+	color:#333;	
+	border-radius: 15px;
+	text-decoration: none;
+	font-size: 8px;
+}
+.gallery_images a:hover {
+	color: #01ADC0;
+	background-color: #01ADC0;
+}
+</style>
+</head>
+
+<body>
+<div id="wrapper">
+	<div class="gallery">
+      <div class="viewport">
+      	<img src="../../NEW Online Portfolio Site/theSite/images/portfolio/Development/ColorCourse/colorcourse-1.jpg">
+      </div>
+      <div class="galleryNav">
+        <div class="prev"></div>
+        <div class="next"></div>
+      </div>
+      <div class="gallery_images">
+      	<a href="../../NEW Online Portfolio Site/theSite/images/portfolio/Development/ColorCourse/colorcourse-1.jpg">1</a>
+        <a href="../../NEW Online Portfolio Site/theSite/images/portfolio/Development/ColorCourse/colorcourse-2.jpg">2</a>
+        <a href="../../NEW Online Portfolio Site/theSite/images/portfolio/Development/ColorCourse/colorcourse-3.jpg">3</a>
+        <a href="../../NEW Online Portfolio Site/theSite/images/portfolio/Development/ColorCourse/colorcourse-4.jpg">4</a>
+      </div>
+      <div class="clear"></div>
+	</div>
+</div>
+<script type="text/javascript">
+var viewport = $(".viewport");
+var focus_img = viewport[0].getElementsByTagName("img")[0];
+
+var gallery_images = $(".gallery_images");
+var list = gallery_images[0].getElementsByTagName("a");
+
+//first list item
+var firstLI = gallery_images[0].firstChild;
+if (firstLI.nodeType != 1)
+{
+	firstLI = firstLI.nextSibling;
+}
+//last list item
+var lastLI = gallery_images[0].lastChild;
+if (lastLI.nodeType != 1)
+{
+	lastLI = lastLI.previousSibling;
+}
+
+//current list item (image) in view
+var current = list[0];
+focus_img.src = current.href;
+	
+function get_nextSibling(cn)
+{
+	//next item
+	var n = cn.nextSibling;
+	//if current item is first in the list
+	if (cn == lastLI)
+	{
+		n = firstLI;
+	}
+	if (n.nodeType != 1)
+	{
+		n = n.nextSibling;
+	}
+	return n;
+}
+
+function get_prevSibling(cp)
+{
+	//previous item
+	var p = cp.previousSibling;	
+
+	//if previous item is last item in list
+	if (cp == firstLI)
+	{
+		p = lastLI;
+	}
+	if (p.nodeType != 1)
+	{
+		p = p.previousSibling;
+	}
+	
+	return p;
+}
+
+// click next
+$(".next").click(
+function() {	
+	var next = get_nextSibling(current);
+	current = next;
+	focus_img.src = current.href;	
+});
+
+// click previous
+$(".prev").click(
+function() {		
+	var prev = get_prevSibling(current);
+	current = prev;
+	focus_img.src = current.href;
+});
+
+//navigate using buttons
+$(".gallery_images a:link").click(
+function() {
+	current = this;
+	focus_img.src = current.href;
+	return false;
+});
+</script>
+</body>
+</html>
