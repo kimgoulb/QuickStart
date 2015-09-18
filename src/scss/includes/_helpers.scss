@@ -1,0 +1,181 @@
+/*==========================================================================
+   COLORS
+ ========================================================================== */
+$black:#000;
+
+/*==========================================================================
+   MEDIA QUERIES // example @include respond-to(mobile) { }
+ ========================================================================== */
+
+  /*
+    @include respond-to(mobile) {}
+    @include respond-to(tablet) {}
+    @include respond-to(desktopSm) {}
+    @include respond-to(desktopLg) {}
+  */
+
+@mixin respond-to($media) {
+
+  @if $media == desktopLg {
+    $total-columns: 32;
+    @media all and (min-width: 1440px) { @content; }
+  }
+
+  @if $media == desktopSm {
+    $total-columns: 32;
+    @media all and (min-width: 1024px) and (max-width: 1439px) { @content; }
+  }
+
+  @if $media == tablet {
+    $total-columns: 24;
+    @media all and (min-width: 768px) and (max-width: 1023px) { @content; }
+  }
+
+  @if $media == mobile {
+    $total-columns: 16;
+    @media all and (max-width: 767px) { @content; }
+  }
+}
+
+/*==========================================================================
+   FONTS
+ ========================================================================== */
+@mixin AvenirLt() { font-family: 'AvenirLTStd-Light', Verdana, sans-serif; font-weight: lighter; }
+
+/*==========================================================================
+   FUNCTIONS
+ ========================================================================== */
+$emBase: 16px; //default
+$total-columns: 12;
+
+// (em calculator)
+@function emCal($pixelBasedNum){
+  @return $pixelBasedNum / $emBase * 1em;
+}
+
+// column width in percent
+@function makeColumn($numOfCols,$context:$total-columns) {
+  @return ($numOfCols / $context) * 100%;
+}
+
+/*==========================================================================
+   MIXINS
+ ========================================================================== */
+
+@mixin border-radius($radius) { -webkit-border-radius: $radius; -moz-border-radius: $radius; border-radius: $radius; }
+@mixin box-sizing($type) { -webkit-box-sizing: $type; -moz-box-sizing: $type; box-sizing: $type; }
+@mixin transition($properties) {-moz-transition: $properties; -webkit-transition: $properties; -o-transition: $properties; transition: $properties;}
+@mixin transform($properties) {-webkit-transform: $properties; -moz-transform: $properties; -ms-transform: $properties; -o-transform: $properties; transform: $properties;}
+
+@mixin calc($property, $expression) {
+  #{$property}: -moz-calc(#{$expression});
+  #{$property}: -webkit-calc(#{$expression});
+  #{$property}: calc(#{$expression});
+}
+
+// column width
+@mixin column_width($numOfCols,$context:$total-columns) {
+   width: makeColumn($numOfCols,$context);
+}
+
+// retina.. Higher display density
+@mixin highdpi($ratio) {
+  @media all and (-webkit-min-device-pixel-ratio: 2),
+  all and (   min--moz-device-pixel-ratio: 2),
+  all and (     -o-min-device-pixel-ratio: 2/1),
+  all and (        min-device-pixel-ratio: 2),
+  all and (                min-resolution: 192dpi),
+  all and (                min-resolution: 2dppx) { @content; }
+}
+
+/*==========================================================================
+   SPRITES
+ ========================================================================== */
+
+$icons: sprite-map("icons/*.png", $layout: smart);
+$icons-2x: sprite-map("icons2x/*.png", $layout: smart);
+// $icons: sprite-map("icons/*.png", $position: 50%, $spacing: 10px);
+// $icons-2x: sprite-map("icons2x/*.png", $position: 50%, $spacing: 10px);
+
+///Sprite mixin, works perfectly with standard defines
+@mixin use-sprite($sprite, $hover:false, $active:false, $disabled:false, $has_small:false, $small_ext:'sm') {
+  // background-image: url(/assets/icons-sef29753709.png);
+  background-image: sprite-url($icons);
+  background-position: sprite-position($icons, $sprite);
+  background-repeat: no-repeat;
+  overflow: hidden;
+  display: inline-block;
+  height: image-height(sprite-file($icons, $sprite));
+  width: image-width(sprite-file($icons, $sprite));
+
+  @if $hover == true {
+    &:hover, &.hover {
+      background-position: sprite-position($icons, ($sprite + "-hover"));
+      @include highdpi(2){
+        background-position: round(nth(sprite-position($icons-2x, ($sprite + "-hover")), 1) / 2) round(nth(sprite-position($icons-2x, ($sprite + "-hover")), 2) / 2);
+      }
+    }
+  }
+
+  @if $active == true {
+    &:active, &.active {
+      background-position: sprite-position($icons, ($sprite + "-active"));
+      @include highdpi(2){
+        background-position: round(nth(sprite-position($icons-2x, ($sprite + "-active")), 1) / 2) round(nth(sprite-position($icons-2x, ($sprite + "-active")), 2) / 2);
+      }
+    }
+  }
+  
+  @if $disabled == true {
+    &.disabled {
+      background-position: sprite-position($icons, ($sprite + "-disabled"));
+      @include highdpi(2){
+        background-position: round(nth(sprite-position($icons-2x, ($sprite + "-disabled")), 1) / 2) round(nth(sprite-position($icons-2x, ($sprite + "-disabled")), 2) / 2);
+      }
+    }
+  }
+
+  @if $has_small == false {
+    @include highdpi(2){
+      background-image: sprite-url($icons-2x);
+      background-size: (image-width(sprite-path($icons-2x)) / 2) (image-height(sprite-path($icons-2x)) / 2);
+      background-position: round(nth(sprite-position($icons-2x, $sprite), 1) / 2) round(nth(sprite-position($icons-2x, $sprite), 2) / 2);
+      // height: image-height(sprite-file($icons-2x, $sprite)) / 2;
+      // width: image-width(sprite-file($icons-2x, $sprite)) / 2;
+    }
+  }
+
+  @if $has_small == true {
+    $ratio: 2;
+    @include respond-to(mobile) { 
+      background-position: sprite-position($icons, ($sprite + "-" + $small_ext));
+      height: image-height(sprite-file($icons, ($sprite + "-" + $small_ext)));
+      width: image-width(sprite-file($icons, ($sprite + "-" + $small_ext)));
+    }
+
+
+    @media all and (-webkit-min-device-pixel-ratio: 2) and (max-width: 575px),
+    all and (   min--moz-device-pixel-ratio: 2)      and (max-width: 575px),
+    all and (     -o-min-device-pixel-ratio: 2/1)    and (max-width: 575px),
+    all and (        min-device-pixel-ratio: 2)      and (max-width: 575px),
+    all and (                min-resolution: 192dpi) and (max-width: 575px),
+    all and (                min-resolution: 2dppx)  and (max-width: 575px) {
+      background-image: sprite-url($icons-2x) !important;
+      background-size: (image-width(sprite-path($icons-2x)) / 2) (image-height(sprite-path($icons-2x)) / 2) !important;
+      background-position: round(nth(sprite-position($icons-2x, ($sprite + "-" + $small_ext)), 1) / 2) round(nth(sprite-position($icons-2x, ($sprite + "-" + $small_ext)), 2) / 2) !important;
+    }
+
+    @media all and (-webkit-min-device-pixel-ratio: 2) and (min-width: 576px),
+    all and (   min--moz-device-pixel-ratio: 2)      and (min-width: 576px),
+    all and (     -o-min-device-pixel-ratio: 2/1)    and (min-width: 576px),
+    all and (        min-device-pixel-ratio: 2)      and (min-width: 576px),
+    all and (                min-resolution: 192dpi) and (min-width: 576px),
+    all and (                min-resolution: 2dppx)  and (min-width: 576px) {
+      background-image: sprite-url($icons-2x);
+      background-size: (image-width(sprite-path($icons-2x)) / 2) (image-height(sprite-path($icons-2x)) / 2);
+      background-position: round(nth(sprite-position($icons-2x, $sprite), 1) / 2) round(nth(sprite-position($icons-2x, $sprite), 2) / 2);
+    }
+
+  }
+
+}

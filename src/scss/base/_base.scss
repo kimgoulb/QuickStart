@@ -1,0 +1,125 @@
+/* Base
+----------------------------------------------*/
+* { margin:0; padding: 0; outline:0; -webkit-margin-before: 0; -webkit-margin-after: 0; -webkit-margin-start: 0px; -webkit-margin-end: 0px; }
+*, *:before, *:after {-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;}
+
+html {
+	height:100%;
+}
+body {color: #111; background-color: #fff; font-family: Times,Georgia,serif; font-size: 100%; height:100%; -webkit-font-smoothing:antialiased; }
+
+html.locked, body.locked { overflow: hidden; }
+.ws-credit { position: fixed; top:0; left:0; z-index: 9999; }
+
+p, li, dd { line-height: 1.5em; }
+em, i, cite {  }
+strong, b { }
+sup { }
+sub { }
+mark { }
+dt {}
+dd { }
+
+blockquote { }
+::selection { background-color:#ddd; }
+
+::-webkit-input-placeholder { color: #ebebeb; }
+:-moz-placeholder {color: #ebebeb; }
+::-moz-placeholder {color: #ebebeb; }
+:-ms-input-placeholder {color: #ebebeb; }
+
+/* Headings
+----------------------------------------------*/
+
+h1, h2, h3, h4, h5 ,h6 { 
+	font-family: Times, Georgia, serif;
+	color:#111;
+
+	&.sm-group-heading { text-align: center; }
+	margin-bottom: 10px;
+}
+h1 {font-size: 50px; line-height: 60px; }
+h2 {font-size: 40px; line-height: 50px; }
+h3 {font-size: 30px; line-height: 40px; }
+h4 {font-size: 25px; line-height: 35px; }
+h5 {
+	font-size: 20px;
+	line-height: 30px;
+}
+h6 {
+	font-size: 16px;
+	line-height: 24px;
+	color:#666;
+}
+p {
+	font-size: 20px;
+	line-height: 30px;
+	color:#111;
+}
+
+/* links
+----------------------------------------------*/
+a, a:link, a:visited {text-decoration: none; color: #111; }
+a:hover, a:active {text-decoration: none; color: #333; }
+
+/* Blockquote
+----------------------------------------------*/
+blockquote {font-size: emCal(35px); line-height: 45px; text-align: center; color:#333; }
+
+/* Media 
+----------------------------------------------*/
+img, video {width: 100%; height: auto; margin: 0 auto; display: block; }
+figcaption {font-size: 85%; }
+
+/* Lists
+----------------------------------------------*/
+ol {list-style: decimal inside;
+	li {
+		ol {
+			list-style: lower-alpha inside; margin-left: 1em;
+			li {margin-bottom: 0; }
+		}
+	}
+}
+
+ul.disc {list-style: disc inside;
+	li {
+		ul {list-style: disc inside; margin-left: 1em;
+			li {margin-bottom: 0; }
+		}
+	}
+}
+/* Tables
+----------------------------------------------*/
+
+
+/* Videos
+----------------------------------------------*/
+.video_wrapper { position: relative; padding-bottom: 56.25%; /* 16:9 */ height:0; overflow:hidden;
+  video, embed, iframe { display:block; position:absolute; top:0; left:0; width:100%; height:100%; border:0; }
+}
+
+/* Buttons
+----------------------------------------------*/
+.simple-btn {display: inline-block; margin:15px auto; color:#666; border: solid 1px #888; padding:10px 15px; background-color: transparent; cursor: pointer;
+	&:link, &:visited {color:#666; }
+	&:hover {color:#333; border: solid 1px #333; }
+}
+
+/* Form
+----------------------------------------------*/
+form { 
+	text-align: center;
+
+	label { 
+		font-size: 18px;
+		line-height: 28px;
+	}
+}
+input { 
+	margin:10px auto;
+}
+
+/* Iframe
+----------------------------------------------*/
+iframe {width:100%; height: auto; }
