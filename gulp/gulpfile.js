@@ -1,19 +1,19 @@
 "use strict";
 
 var gulp        = require('gulp'),
-  compass     = require('gulp-compass'),
+  compass       = require('gulp-compass'),
   sass          = require('gulp-ruby-sass'),
   autoprefixer  = require('gulp-autoprefixer'),
-  minifycss     = require('gulp-minify-css'),
+  cssnano       = require('gulp-cssnano'),
   rename        = require('gulp-rename'),
-  clean         = require('gulp-clean'),
   lr            = require('tiny-lr'),
   jshint        = require('gulp-jshint'),
   concat        = require('gulp-concat'),
   imagemin      = require('gulp-imagemin'),
   uglify        = require('gulp-uglify'),
   cache         = require('gulp-cache'),
-  notify        = require('gulp-notify');
+  notify        = require('gulp-notify'),
+  rimraf        = require('gulp-rimraf');
 
 var paths = {
   app  : '../src',
@@ -33,7 +33,7 @@ gulp.task('styles', function(){
     .pipe(autoprefixer('last 2 version', 'safari 5', 'ie 8', 'ie 9', 'opera 12.1', 'ios 6', 'android 4'))
     .pipe(gulp.dest( paths.app + '/css'))
     .pipe(rename('app.min.css'))
-    .pipe(minifycss())
+    .pipe(cssnano())
     .pipe(gulp.dest( paths.dest + '/css'))
     .pipe(notify({ message: 'Styles task complete!' }));
 });
@@ -79,14 +79,19 @@ gulp.task('scripts:vendor', [], function(){
     .pipe(notify({ message: 'Vendor Scripts task complete!' }));
 });
 
-gulp.task('images', function(){
+gulp.task('del-icons', function(){
+  return gulp.src(paths.dest + '/img/icons*', { read: false })
+    .pipe(rimraf({ force: true }));
+});
+
+gulp.task('images', ['del-icons'], function(){
+
   return gulp.src([
       paths.app + '/img/**/*.png',
       paths.app + '/img/**/*.jpg',
       paths.app + '/img/**/*.gif',
       '!' + paths.app + '/img/icons/*',
       '!' + paths.app + '/img/icons2x/*'
-
     ])
     // .pipe(cache(imagemin({ optimizationLevel: 3, progressive: true, interlaced: true })))
     .pipe(gulp.dest( paths.dest + '/img'))
@@ -106,10 +111,6 @@ gulp.task('copy-fonts', function() {
 
 gulp.task('copy', function(){
   gulp.start('copy-fonts');
-});
-
-gulp.task('default', ['copy'] , function(){
-  gulp.start('styles', 'scripts', 'images');
 });
 
 // WATCH
@@ -145,4 +146,9 @@ gulp.task('watch', function() {
       paths.app + '/img/**/*.gif'
     ], ['images']);
 
+});
+
+// DEFAULT
+gulp.task('default', ['copy'] , function(){
+  gulp.start('styles', 'scripts', 'images');
 });
