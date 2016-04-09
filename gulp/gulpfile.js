@@ -1,19 +1,20 @@
 "use strict";
 
 var gulp        = require('gulp'),
-  compass       = require('gulp-compass'),
-  sass          = require('gulp-ruby-sass'),
   autoprefixer  = require('gulp-autoprefixer'),
-  cssnano       = require('gulp-cssnano'),
-  rename        = require('gulp-rename'),
-  lr            = require('tiny-lr'),
-  jshint        = require('gulp-jshint'),
-  concat        = require('gulp-concat'),
-  imagemin      = require('gulp-imagemin'),
-  uglify        = require('gulp-uglify'),
   cache         = require('gulp-cache'),
+  compass       = require('gulp-compass'),
+  concat        = require('gulp-concat'),
+  cssnano       = require('gulp-cssnano'),
+  imagemin      = require('gulp-imagemin'),
+  jshint        = require('gulp-jshint'),
+  lr            = require('tiny-lr'),
+  newer         = require('gulp-newer'),
   notify        = require('gulp-notify'),
-  rimraf        = require('gulp-rimraf');
+  rimraf        = require('gulp-rimraf'),
+  rename        = require('gulp-rename'),
+  sass          = require('gulp-ruby-sass'),
+  uglify        = require('gulp-uglify');
 
 var paths = {
   app  : '../src',
@@ -25,12 +26,13 @@ gulp.task('styles', function(){
     paths.app + '/scss/*.scss'
     ])
     .pipe(compass({
+      config_file: 'config.rb',
       style: 'expanded',
       css: paths.app + '/css',
       sass: paths.app + '/scss',
       image: paths.app + '/img'
     }))
-    .pipe(autoprefixer('last 2 version', 'safari 5', 'ie 8', 'ie 9', 'opera 12.1', 'ios 6', 'android 4'))
+    .pipe(autoprefixer('last 2 versions', 'safari 5', 'ie 8', 'ie 9', 'opera 12.1', 'ios 6', 'android 4'))
     .pipe(gulp.dest( paths.app + '/css'))
     .pipe(rename('app.min.css'))
     .pipe(cssnano())
@@ -41,6 +43,7 @@ gulp.task('styles', function(){
 gulp.task('lintscripts', function(){
   return gulp.src([
       '!' + paths.app + '/js/vendor/*',
+      '!' + paths.app + '/js/vendor.js',
       '!' + paths.app + '/js/app.js',
       paths.app + '/js/**/*.js'
     ])
@@ -93,25 +96,23 @@ gulp.task('images', ['del-icons'], function(){
       '!' + paths.app + '/img/icons/*',
       '!' + paths.app + '/img/icons2x/*'
     ])
-    // .pipe(cache(imagemin({ optimizationLevel: 3, progressive: true, interlaced: true })))
-    .pipe(gulp.dest( paths.dest + '/img'))
+    .pipe(newer(paths.dest + '/img'))
+    // .pipe(imagemin({ optimizationLevel: 3, progressive: true, interlaced: true }))
+    .pipe(gulp.dest(paths.dest + '/img'))
     .pipe(notify({ message: 'Images task complete!' }));
 });
 
-
-gulp.task('copy-fonts', function() {
+gulp.task('fonts', function() {
   return gulp.src([
-      paths.app + '/fonts/**/*.ttf',
-      paths.app + '/fonts/**/*.svg',
-      paths.app + '/fonts/**/*.eot',
-      paths.app + '/fonts/**/*.woff'
+      paths.app + '/fonts/**/*'
     ])
+    .pipe(newer(paths.dest + '/fonts'))
     .pipe(gulp.dest(paths.dest + '/fonts'));
 });
 
-gulp.task('copy', function(){
-  gulp.start('copy-fonts');
-});
+// gulp.task('copy', function(){
+//   gulp.start('fonts');
+// });
 
 // WATCH
 gulp.task('watch_scripts', function(){
@@ -130,25 +131,28 @@ gulp.task('watch_styles', function(){
 gulp.task('watch', function() {
   // Watch .scss files
   gulp.watch([
-      paths.app + '/scss/**/*.scss',
-      paths.app + '/css/**/*.css'
+      paths.app + '/scss/**/*',
+      paths.app + '/css/**/*'
     ], ['styles']);
 
   // Watch .js files
   gulp.watch([
-      paths.app + '/js/**/*.js'
+      paths.app + '/js/**/*'
     ], ['scripts']);
 
   // Watch images
   gulp.watch([
-      paths.app + '/img/**/*.png',
-      paths.app + '/img/**/*.jpg',
-      paths.app + '/img/**/*.gif'
+      paths.app + '/img/**/*'
     ], ['images']);
+
+  // Watch fonts
+  gulp.watch([
+      paths.app + '/fonts/**/*'
+    ], ['fonts']);
 
 });
 
 // DEFAULT
-gulp.task('default', ['copy'] , function(){
-  gulp.start('styles', 'scripts', 'images');
+gulp.task('default', function(){
+  gulp.start('fonts', 'images', 'styles', 'scripts');
 });
