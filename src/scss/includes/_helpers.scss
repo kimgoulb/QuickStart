@@ -58,6 +58,11 @@ $total-columns: 12;
   @return ($numOfCols / $context) * 100%;
 }
 
+// calculate letter spacing from a design // https://scotch.io/tutorials/converting-photoshop-letter-spacing-to-css
+@function emLetterSpace($designNum) {
+  @return $designNum / 1000;
+}
+
 /*==========================================================================
    MIXINS
  ========================================================================== */
